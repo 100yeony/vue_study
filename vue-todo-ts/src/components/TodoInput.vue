@@ -1,6 +1,6 @@
 <template>
   <div class="inputBox shadow">
-    <input type="text" :value="newTodoItem" @input="handleInput" @keyup.enter="addTodo" />
+    <input type="text" autofocus :value="newTodoItem" @input="handleInput" @keyup.enter="addTodo" />
     <!-- <input type="text"  v-model="newTodoItem" /> -->
     <span class="addContainer" @click="addTodo">
       <i class="fas fa-plus addBtn"></i>
@@ -36,6 +36,9 @@ const addTodo = () => {
 </script>
 
 <style scoped>
+i,span {
+    cursor: pointer;
+}
 input:focus {
   outline: none;
 }
