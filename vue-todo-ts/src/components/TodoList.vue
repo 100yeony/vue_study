@@ -1,9 +1,16 @@
 <template>
   <div>
     <ul>
-      <li v-for="(item, idx) in todoItems" :key="idx">
-        {{ item }}
-        <span class="removeBtn" @click="removeTodo(item, idx)">
+      <li v-for="(todoItem, idx) in todoItems" :key="idx">
+        <i
+          class="fas fa-check checkBtn"
+          :class="{ checkBtnCompleted: todoItem.completed }"
+          @click="toggleComplete(todoItem)"
+        ></i>
+        <span :class="{ textCompleted: todoItem.completed }">{{
+          todoItem.item
+        }}</span>
+        <span class="removeBtn" @click="removeTodo(todoItem.item, idx)">
           <i class="fas fa-trash-alt"></i>
         </span>
       </li>
@@ -12,28 +19,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
-const todoItems = ref<string[]>([]);
+import TodoItem from "@/types/TodoItem";
+import { ref } from "vue";
+const todoItems = ref<TodoItem[]>([]);
 
-onBeforeMount(() => {
-  if (localStorage.length > 0) {
-    for (var i = 0; i < localStorage.length; i++) {
-      const storageValue = localStorage.key(i) as string;
-      todoItems.value.push(storageValue);
-    }
-  }
-  console.log(todoItems.value);
-});
-
-const removeTodo = (todoItem: string, index: number) => {
-  localStorage.removeItem(todoItem);
+const removeTodo = (todoItemStr: string, index: number) => {
+  localStorage.removeItem(todoItemStr);
   todoItems.value.splice(index, 1);
+};
+
+const toggleComplete = (todoItem: TodoItem) => {
+  const { item, completed } = todoItem;
+  todoItem.completed = !completed;
+  localStorage.removeItem(item);
+  localStorage.setItem(item, JSON.stringify(todoItem));
 };
 </script>
 
 <style scoped>
-i,span {
-    cursor: pointer;
+i,
+span {
+  cursor: pointer;
 }
 ul {
   list-style-type: none;

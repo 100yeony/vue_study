@@ -1,6 +1,12 @@
 <template>
   <div class="inputBox shadow">
-    <input type="text" autofocus :value="newTodoItem" @input="handleInput" @keyup.enter="addTodo" />
+    <input
+      type="text"
+      autofocus
+      :value="newTodoItem"
+      @input="handleInput"
+      @keyup.enter="addTodo"
+    />
     <!-- <input type="text"  v-model="newTodoItem" /> -->
     <span class="addContainer" @click="addTodo">
       <i class="fas fa-plus addBtn"></i>
@@ -9,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import TodoItem from "@/types/TodoItem";
 import { ref } from "vue";
 const newTodoItem = ref("");
 
@@ -29,15 +36,17 @@ const clearInput = () => {
 const addTodo = () => {
   const todoItem = newTodoItem.value;
   if (newTodoItem.value !== "") {
-    localStorage.setItem(todoItem, todoItem);
+    const todoItemObj: TodoItem = { completed: false, item: todoItem };
+    localStorage.setItem(todoItem, JSON.stringify(todoItemObj));
     clearInput();
   }
 };
 </script>
 
 <style scoped>
-i,span {
-    cursor: pointer;
+i,
+span {
+  cursor: pointer;
 }
 input:focus {
   outline: none;
