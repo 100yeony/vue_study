@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <li v-for="(todoItem, idx) in todoItems" :key="idx">
+      <li v-for="(todoItem, idx) in props.propsData" :key="idx">
         <i
           class="fas fa-check checkBtn"
           :class="{ checkBtnCompleted: todoItem.completed }"
@@ -20,7 +20,12 @@
 
 <script setup lang="ts">
 import TodoItem from "@/types/TodoItem";
-import { ref } from "vue";
+import { PropType, ref } from "vue";
+
+const props = defineProps({
+  propsData: { type: Array as PropType<TodoItem[]>, required: true },
+});
+
 const todoItems = ref<TodoItem[]>([]);
 
 const removeTodo = (todoItemStr: string, index: number) => {

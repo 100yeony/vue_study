@@ -19,7 +19,7 @@ import TodoItem from "@/types/TodoItem";
 import { ref } from "vue";
 const newTodoItem = ref("");
 
-const emit = defineEmits(["input:todo"]);
+const emit = defineEmits(["input:todo","add:todo"]);
 
 const handleInput = (event: Event) => {
   const todoText = (event.target as HTMLInputElement).value;
@@ -36,8 +36,7 @@ const clearInput = () => {
 const addTodo = () => {
   const todoItem = newTodoItem.value;
   if (newTodoItem.value !== "") {
-    const todoItemObj: TodoItem = { completed: false, item: todoItem };
-    localStorage.setItem(todoItem, JSON.stringify(todoItemObj));
+    emit("add:todo", todoItem)
     clearInput();
   }
 };
