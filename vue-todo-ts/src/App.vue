@@ -2,7 +2,7 @@
   <div id="app">
     <TodoHeader></TodoHeader>
     <TodoInput @add:todo="addTodo"></TodoInput>
-    <TodoList :props-data="todoItems"></TodoList>
+    <TodoList :props-data="todoItems" @remove:todo="removeTodo"></TodoList>
     <TodoFooter></TodoFooter>
   </div>
 </template>
@@ -25,6 +25,7 @@ export default defineComponent({
   },
   setup() {
     const todoItems = reactive<TodoItem[]>([]);
+
     onBeforeMount(() => {
       if (localStorage.length > 0) {
         for (var i = 0; i < localStorage.length; i++) {
@@ -39,10 +40,15 @@ export default defineComponent({
     const addTodo = (todoItemStr: string) => {
       const todoItemObj: TodoItem = { completed: false, item: todoItemStr };
       localStorage.setItem(todoItemStr, JSON.stringify(todoItemObj));
-      todoItems.push(todoItemObj)
+      todoItems.push(todoItemObj);
     };
 
-    return { todoItems, addTodo };
+    const removeTodo = (todoItemStr: string, index: number) => {
+      localStorage.removeItem(todoItemStr);
+      todoItems.splice(index, 1);
+    };
+
+    return { todoItems, addTodo, removeTodo };
   }, //setup
 });
 </script>

@@ -5,7 +5,7 @@
         <i
           class="fas fa-check checkBtn"
           :class="{ checkBtnCompleted: todoItem.completed }"
-          @click="toggleComplete(todoItem)"
+          @click="toggleComplete(todoItem, idx)"
         ></i>
         <span :class="{ textCompleted: todoItem.completed }">{{
           todoItem.item
@@ -26,18 +26,14 @@ const props = defineProps({
   propsData: { type: Array as PropType<TodoItem[]>, required: true },
 });
 
-const todoItems = ref<TodoItem[]>([]);
+const emit = defineEmits(["remove:todo", "toggle:todo"])
 
 const removeTodo = (todoItemStr: string, index: number) => {
-  localStorage.removeItem(todoItemStr);
-  todoItems.value.splice(index, 1);
+  emit("remove:todo", todoItemStr, index)
 };
 
-const toggleComplete = (todoItem: TodoItem) => {
-  const { item, completed } = todoItem;
-  todoItem.completed = !completed;
-  localStorage.removeItem(item);
-  localStorage.setItem(item, JSON.stringify(todoItem));
+const toggleComplete = (todoItem: TodoItem, index: number) => {
+  emit("toggle:todo", todoItem, index)
 };
 </script>
 
