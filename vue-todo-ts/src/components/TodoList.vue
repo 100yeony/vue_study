@@ -1,62 +1,54 @@
 <template>
   <div>
-    <TransitionGroup name="list" tag="ul">
-      <li v-for="(todoItem, idx) in props.propsData" :key="idx">
-        <i
-          class="fas fa-check checkBtn"
-          :class="{ checkBtnCompleted: todoItem.completed }"
-          @click="toggleComplete(todoItem, idx)"
-        ></i>
-        <span :class="{ textCompleted: todoItem.completed }">{{
-          todoItem.item
-        }}</span>
-        <span class="removeBtn" @click="removeTodo(todoItem.item, idx)">
-          <i class="fas fa-trash-alt"></i>
-        </span>
-      </li>
-    </TransitionGroup>
+      <TransitionGroup name="list" tag="ul">
+          <li v-for="(todoItem, idx) in todoItems" :key="idx">
+              <i class="fas fa-check checkBtn" :class="{ checkBtnCompleted: todoItem.completed }"
+                  @click="toggleComplete(todoItem, idx)"></i>
+              <span :class="{ textCompleted: todoItem.completed }">{{ todoItem.item }}</span>
+              <span class="removeBtn" @click="removeTodo(todoItem.item, idx)">
+                  <i class="fas fa-trash-alt"></i>
+              </span>
+
+          </li>
+      </TransitionGroup>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import TodoItem from "@/types/TodoItem";
-import { PropType } from "vue";
+import TodoItem from '@/types/TodoItem';
+import { computed } from 'vue'
+import { useStore } from "vuex"
 
-const props = defineProps({
-  propsData: { type: Array as PropType<TodoItem[]>, required: true },
-});
+const store = useStore()
+const todoItems = computed(() => store.state.todoItems)
 
-const emit = defineEmits(["remove:todo", "toggle:todo"]);
+const emit = defineEmits(["remove:todo", "toggle:todo"])
 
 const removeTodo = (todoItemStr: string, index: number) => {
-  emit("remove:todo", todoItemStr, index);
-};
+  emit('remove:todo', todoItemStr, index)
+}
 
 const toggleComplete = (todoItem: TodoItem, index: number) => {
-  emit("toggle:todo", todoItem, index);
-};
+  emit('toggle:todo', todoItem, index)
+}
+
+
 </script>
 
 <style scoped>
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
 i,
 span {
   cursor: pointer;
 }
+
 ul {
   list-style-type: none;
   padding-left: 0px;
   margin-top: 0;
   text-align: left;
 }
+
 li {
   display: flex;
   min-height: 50px;
@@ -67,20 +59,34 @@ li {
   background: white;
   border-radius: 5px;
 }
+
 .removeBtn {
   margin-left: auto;
   color: #de4343;
 }
+
 .checkBtn {
   line-height: 45px;
   color: #62acde;
   margin-right: 5px;
 }
+
 .checkBtnCompleted {
   color: #b3adad;
 }
+
 .textCompleted {
   text-decoration: line-through;
   color: #b3adad;
 }
-</style>
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}</style>
